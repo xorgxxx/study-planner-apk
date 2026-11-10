@@ -1,0 +1,7 @@
+{
+  "appId": "com.study.planner",
+  "appName": "منظّم دراستي",
+  "webDir": "www",
+  "android": { "allowMixedContent": false, "webContentsDebuggingEnabled": false },
+  "backgroundColor": "#0f0d0c"
+}

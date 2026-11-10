@@ -1,0 +1,17 @@
+{
+  "name": "study-planner",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "sync": "cap sync android",
+    "apk": "bash build-apk.sh"
+  },
+  "author": "",
+  "dependencies": {
+    "@capacitor/android": "^8.6.0",
+    "@capacitor/app": "^8.1.2",
+    "@capacitor/cli": "^8.6.0",
+    "@capacitor/clipboard": "^8.0.1",
+    "@capacitor/core": "^8.6.0"
+  }
+}
