@@ -32,10 +32,32 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install Android SDK components
+      - name: Set up Android SDK (cmdline-tools + required packages)
         run: |
-          yes | sdkmanager --licenses > /dev/null 2>&1 || true
-          sdkmanager "platform-tools" "platforms;android-36" "build-tools;36.0.0"
+          set -e
+          SDKMANAGER=""
+          for candidate in "${ANDROID_HOME:-}" "${ANDROID_SDK_ROOT:-}" "$HOME/android-sdk"; do
+            if [ -n "$candidate" ] && [ -x "$candidate/cmdline-tools/latest/bin/sdkmanager" ]; then
+              SDK_ROOT="$candidate"
+              SDKMANAGER="$candidate/cmdline-tools/latest/bin/sdkmanager"
+              break
+            fi
+          done
+          if [ -z "$SDKMANAGER" ]; then
+            SDK_ROOT="$HOME/android-sdk"
+            mkdir -p "$SDK_ROOT/cmdline-tools"
+            echo "No usable sdkmanager found - downloading Android cmdline-tools..."
+            curl -sSL --retry 3 -o /tmp/cmdtools.zip "https://dl.google.com/android/repository/commandlinetools-linux-13114758_latest.zip"
+            unzip -q /tmp/cmdtools.zip -d "$SDK_ROOT/cmdline-tools"
+            mv "$SDK_ROOT/cmdline-tools/cmdline-tools" "$SDK_ROOT/cmdline-tools/latest"
+            SDKMANAGER="$SDK_ROOT/cmdline-tools/latest/bin/sdkmanager"
+          fi
+          echo "Using SDK root: $SDK_ROOT"
+          echo "ANDROID_HOME=$SDK_ROOT" >> "$GITHUB_ENV"
+          echo "ANDROID_SDK_ROOT=$SDK_ROOT" >> "$GITHUB_ENV"
+          echo "$SDK_ROOT/cmdline-tools/latest/bin" >> "$GITHUB_PATH"
+          yes | "$SDKMANAGER" --licenses > /dev/null 2>&1 || true
+          "$SDKMANAGER" "platform-tools" "platforms;android-36" "build-tools;36.0.0"
 
       - name: Install npm dependencies
         run: npm install
