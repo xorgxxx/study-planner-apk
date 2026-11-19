@@ -128,11 +128,18 @@ h3{margin:1em 0 .5em;font-size:.92rem}.g{gap:8px}.tl{padding:9px 4px}.tl b{font-
 const $=s=>document.querySelector(s),K='bac-study-v1',WD=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'],PR=['عادية','مرتفعة','عاجلة'],IMP=['منخفضة','متوسطة','عالية'],TY=['دراسة درس','حل تمارين','مراجعة','حفظ','حل امتحان','أخرى'],TPL='قراءة الدرس وفهمه\nدراسة القوانين والتعاريف\nحل الأمثلة\nحل التمارين\nاختبار نفسي في الدرس',MODES={soft:'مرن',mid:'متوازن',hard:'صارم'};
 const IC={home:'M3 11l9-8 9 8M5 10v10h14V10',plan:'M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01',tasks:'M9 11l3 3 8-8M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9',timer:'<circle cx=12 cy=13 r=8 /><path d="M12 9v4l2 2M9 2h6"/>',exams:'M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9zM14 3v6h6M8 13h8M8 17h5',week:'M3 5h18v16H3zM3 10h18M8 3v4M16 3v4',future:'M12 2l2.5 6.5L21 11l-6.5 2.5L12 20l-2.5-6.5L3 11l6.5-2.5z',subj:'M4 4h12a4 4 0 0 1 4 4v12H8a4 4 0 0 1-4-4zM4 16a4 4 0 0 1 4-4h12',stats:'M4 20V10M10 20V4M16 20v-7M22 20H2',set:'M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6',ai:'M12 3l1.8 4.7L18.5 9.5 13.8 11.3 12 16l-1.8-4.7L5.5 9.5l4.7-1.8zM19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z',more:'M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z',trash:'M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3',flame:'M12 2c1 4 5 5 5 10a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 3 2 3 0-4-1-6 1-9z',theme:'<circle cx=12 cy=12 r=4 /><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',copy:'M9 9h11v11H9zM5 15H4V4h11v1'};
 function ic(n){const v=IC[n]||'';return '<svg class=i viewBox="0 0 24 24" aria-hidden=true>'+(v[0]=='<'?v:'<path d="'+v+'"/>')+'</svg>'}
-const NAV=[['home','الرئيسية','home',1],['plan','خطتي','plan',1],['tasks','المهام','tasks',1],['timer','المؤقت','timer',1],['ai','مساعد الذكاء الاصطناعي','ai'],['exams','الاختبارات','exams'],['week','الأسبوع','week'],['future','المستقبل','future'],['subj','المواد','subj'],['stats','الإحصائيات','stats'],['set','الإعدادات','set']];
-const D0=()=>({subjects:['رياضيات','فيزياء','كيمياء','علوم','عربي','إنجليزي'],tasks:[],future:[],exams:[],sessions:[],days:{},timer:null,theme:'',set:{mode:'mid',goal:180,start:'16:00',foc:25,brk:5,snd:true,sr:true,pomo:false}});
+const NAV=[['home','الرئيسية','home',1],['plan','خطتي','plan',1],['tasks','المهام','tasks',1],['timer','المؤقت','timer',1],['ai','مساعد الذكاء الاصطناعي','ai'],['exams','الاختبارات','exams'],['week','الأسبوع','week'],['future','المستقبل','future'],['subj','المواد','subj'],['stats','الإحصائيات','stats'],['bin','سلة المحذوفات','trash'],['set','الإعدادات','set']];
+const D0=()=>({subjects:['رياضيات','فيزياء','كيمياء','علوم','عربي','إنجليزي'],tasks:[],future:[],exams:[],sessions:[],days:{},timer:null,bin:[],rems:[],theme:'',set:{mode:'mid',goal:180,start:'16:00',foc:25,brk:5,lbrk:15,cdm:25,tm:'free',rem:false,snd:true}});
 let S,UI={page:'home',last:undefined,wk:0,edit:null,end:false,q:'',fs:'',fst:'',fd:'',cf:'',msg:'',qa:false};
 try{S=JSON.parse(localStorage.getItem(K))}catch(e){}
-S=Object.assign(D0(),S&&typeof S=='object'?S:{});S.set=Object.assign(D0().set,S.set&&typeof S.set=='object'?S.set:{});S.set.pomo=false;if(S.timer){S.timer.pomo=0;S.timer.brk=0}
+S=Object.assign(D0(),S&&typeof S=='object'?S:{});S.set=Object.assign(D0().set,S.set&&typeof S.set=='object'?S.set:{});function fixS(){S.set=Object.assign(D0().set,S.set&&typeof S.set=='object'?S.set:{});delete S.set.sr;delete S.set.pomo;
+ ['tasks','future','exams','sessions','bin','rems'].forEach(k=>{if(!Array.isArray(S[k]))S[k]=[]});
+ const dn=t=>t.steps&&t.steps.length?t.steps.every(x=>x.d):t.done,sr=t=>String(t.src||'').startsWith('sr:');
+ S.tasks=S.tasks.filter(t=>!(sr(t)&&!dn(t)&&!S.sessions.some(x=>x.k=='t'&&x.i==t.id)));
+ S.tasks.forEach(t=>{delete t.srd;if(sr(t)){delete t.src;if(t.note=='مراجعة متباعدة تلقائية')t.note=''}});
+ S.bin=S.bin.filter(b=>b&&b.k&&b.it!=null);S.rems=S.rems.filter(r=>r&&r.at>Date.now()-12e4);
+ if(S.timer&&!S.timer.mode){Object.assign(S.timer,{mode:'free',ph:'f',pa:0,pl:0,blk:0});delete S.timer.brk;delete S.timer.pomo}}
+fixS();
 const save=()=>{try{localStorage.setItem(K,JSON.stringify(S))}catch(e){}};
 const RM=()=>!!(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches);
 const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])),id=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,5);
@@ -150,13 +157,13 @@ const lim=()=>S.set.mode=='hard'?2:S.set.mode=='mid'?4:99,lock=()=>S.set.mode!='
 const gm=()=>{const n=due().length;return(n==1?'لديك مهمة مطلوبة واحدة لم تنجزها بعد.':'لديك '+n+' مهام مطلوبة لم تنجزها بعد.')+' أنهِ مهامك الحالية أولًا، ثم ينفتح لك قسم المستقبل.'};
 const dayT=t=>S.tasks.filter(x=>x.due==t||(!isD(x)&&x.due<t)||(isD(x)&&x.doneAt==t&&x.due<t));
 const SB=s=>{const o=OBJ(s.k).find(x=>x.id==s.i);return o&&o.subj},spent=(k,i)=>S.sessions.filter(s=>s.k==k&&s.i==i).reduce((a,s)=>a+s.sec,0)/60,minOn=(a,b)=>S.sessions.filter(s=>s.d>=a&&s.d<=b).reduce((x,s)=>x+s.sec,0)/60;
-const el=()=>{const t=S.timer;return t?t.acc+(t.st?(Date.now()-t.st)/1000:0):0},lab=(k,i)=>{const o=OBJ(k).find(x=>x.id==i);return o?o.title+' — '+o.subj:'(محذوفة)'};
+const pel=()=>{const t=S.timer;return t?t.pa+(t.st?(Date.now()-t.st)/1000:0):0},el=()=>{const t=S.timer;return t?t.acc+(t.ph=='b'?0:pel()):0},lab=(k,i)=>{const o=OBJ(k).find(x=>x.id==i);return o?o.title+' — '+o.subj:'(محذوفة)'};
 const ex=e=>{const d=dd(e.date,td()),steps=e.lessons.length+1,dn=e.lessons.filter(l=>l.d).length+(e.rv?1:0),rem=e.lessons.filter(l=>!l.d).reduce((a,l)=>a+l.min,0)+(e.rv?0:e.rev),av=Math.max(1,d)*e.hrs*60,sc=d<0?-1:40*Math.min(2,rem/av)+40/(1+d)+6*(5-e.ready);return{d,steps,dn,rem,sc,r:rem/av,lv:sc>=70?2:sc>=40?1:0}};
 const paceL=x=>x.rem<=0?'جاهز':x.r<=.6?'على المسار':x.r<=1?'مشدود':'متأخر عن الوتيرة';
 const unsch=e=>e.lessons.some((l,j)=>!l.d&&!S.tasks.some(k=>k.src=='e:'+e.id+':'+j))||(!e.rv&&e.rev>0&&!S.tasks.some(k=>k.src=='e:'+e.id+':rv'));
 const opt=(v,l,c)=>`<option value="${v}"${v==c?' selected':''}>${l}</option>`,sel=(a,c)=>a.map(x=>opt(esc(x),esc(x),c)).join(''),so=(a,b)=>b.pri-a.pri||(a.due<b.due?-1:1);
 const ul=a=>a.length?'<ul>'+a.map(x=>`<li>${esc(x)}</li>`).join('')+'</ul>':'<p class=mu>—</p>';
-const delb=(k,i)=>UI.cf==k+i?`<button class="b er" data-a=del data-k=${k} data-i=${i}>تأكيد الحذف</button>`:`<button class=b data-a=cf data-v=${k+i} title="حذف">${ic('trash')}</button>`;
+const delb=(k,i)=>UI.cf==k+i?`<button class="b er" data-a=del data-k=${k} data-i=${i}>تأكيد الحذف</button>`:`<button class=b data-a=cf data-v=${k+i} title="نقل إلى سلة المحذوفات">${ic('trash')}</button>`;
 const tl=(l,v)=>`<div class=tl><b>${v}</b><small>${l}</small></div>`;
 const hb=(r,f=fm)=>{const mx=Math.max(1,...r.map(x=>x[1]));return r.length?r.map(x=>`<div class=hb><span>${esc(x[0])}</span><div class=bar><i style="width:${x[1]/mx*100}%"></i></div><b>${f(x[1])}</b></div>`).join(''):'<p class=mu>لا توجد بيانات بعد.</p>'};
 
@@ -196,9 +203,9 @@ function coach(){const t=td(),o=[],P_=plan(),od=S.tasks.filter(x=>!isD(x)&&x.due
 function mvTask(i,nd){const t=T(i);if(!t||!nd||nd==t.due)return;if(nd>t.due&&nd>td()){const L=lim();if((t.pp||0)>=L){UI.msg=' أجّلت «'+t.title+'» '+t.pp+' مرات — وضع «'+MODES[S.set.mode]+'» لا يسمح بتأجيل جديد. أنجزها اليوم ولو 15 دقيقة.';return}t.pp=(t.pp||0)+1;if(L<99&&L-t.pp<=1)UI.msg='ℹ تبقّى لهذه المهمة '+(L-t.pp)+' تأجيل فقط.'}t.due=nd}
 function sync(t){if(!t.src)return;const m=t.src.match(/^e:([^:]+):(.+)$/);if(!m)return;const e=G('exams',m[1]);if(!e)return;const d=isD(t);if(m[2]=='rv')e.rv=d;else if(e.lessons[+m[2]])e.lessons[+m[2]].d=d}
 function setTD(src,v){S.tasks.filter(k=>k.src==src).forEach(k=>{k.done=v;k.steps.forEach(s=>s.d=v);fz(k)})}
-function onDone(t){if(S.set.sr&&!t.srd&&!/^(sr|e):/.test(t.src||'')&&['دراسة درس','حل تمارين','حفظ'].includes(t.type)){t.srd=1;[2,7].forEach((n,k)=>S.tasks.push(mkT({subj:t.subj,title:'مراجعة: '+t.title,type:'مراجعة',est:Math.max(10,Math.round(t.est*.3)),due:ad(td(),n),note:'مراجعة متباعدة تلقائية',src:'sr:'+t.id+':'+k})));UI.msg=' أضفت مراجعتين متباعدتين (بعد يومين وبعد أسبوع) لتثبيت الحفظ.'}}
-function onUndo(t){if(t.srd){S.tasks=S.tasks.filter(x=>!(x.src&&x.src.startsWith('sr:'+t.id+':')&&!isD(x)&&!spent('t',x.id)));t.srd=0}}
-function chk(t,w){fz(t);sync(t);const n=isD(t);if(n&&!w)onDone(t);else if(!n&&w)onUndo(t)}
+
+
+function chk(t,w){fz(t);sync(t)}
 function aplan(e){const t=td(),x=ex(e);if(x.d<1){UI.msg='الاختبار اليوم أو انتهى — لا مجال للجدولة.';return}
  const last=ad(e.date,-1),cap=Math.round(e.hrs*60),load={};S.tasks.filter(k=>!isD(k)).forEach(k=>load[k.due]=(load[k.due]||0)+need(k));
  const hasRv=!e.rv&&e.rev>0&&!S.tasks.some(k=>k.src=='e:'+e.id+':rv'),le=hasRv&&last>t?ad(last,-1):last;let d=t,n=0;
@@ -268,12 +275,18 @@ P.exams=()=>{const a=S.exams.map(e=>({e,x:ex(e)})).sort((p,q)=>(q.x.d>=0)-(p.x.d
 return `<h2>الاختبارات</h2><details class=c><summary><b>＋ اختبار جديد</b></summary><form data-f=exam class=fm><label>المادة<select name=subj>${sel(S.subjects)}</select></label><label>اسم الاختبار أو موضوعه<input name=title required></label><label>تاريخ الاختبار<input type=date name=date required value="${ad(td(),7)}"></label><label>المراجعة النهائية (دقائق)<input name=rev type=number min=0 value=60></label><label>ساعات التحضير المتاحة يوميًا<input name=hrs type=number step=.25 min=.25 value=2></label><label>مستوى استعدادي (1 ضعيف – 5 ممتاز)<select name=ready>${[1,2,3,4,5].map(n=>opt(n,n,2)).join('')}</select></label>
 <label class=w>الدروس الداخلة (سطر لكل درس: الاسم | الدقائق)<textarea name=lessons rows=4 placeholder="الاشتقاق | 60"></textarea></label><label class=w>ملاحظات<input name=note></label><div class=w><button class="b pr">حفظ الاختبار</button></div></form></details>
 ${a.length?a.map(o=>ecard(o.e)).join(''):'<p class=mu>لا اختبارات بعد. بعد إضافة اختبار اضغط «جدولة تلقائية» ليوزّع النظام دروسه على الأيام المتاحة.</p>'}`};
-function clk(){const t=S.timer,C=565.5;if(!t)return{s:hms(0),f:0};const e=el();if(t.brk){const r=Math.max(0,(t.brk-Date.now())/1000);return{s:hms(r),f:1-r/(S.set.brk*60)}}if(t.pomo){const L=S.set.foc*60;return{s:hms(Math.max(0,(t.blk+1)*L-e)),f:Math.min(1,(e-t.blk*L)/L)}}return{s:hms(e),f:(e%3600)/3600}}
-P.timer=()=>{const t=S.timer,ts=S.tasks.filter(x=>!isD(x)).sort((a,b)=>scT(b)-scT(a)),es=S.exams.filter(e=>ex(e).d>=0),fs=S.future.filter(f=>!fdn(f)),lk=lock(),og=(l,a,k)=>a.length?`<optgroup label="${l}">${a.map(x=>`<option value="${k}:${x.id}">${esc(x.title)} — ${esc(x.subj)}</option>`).join('')}</optgroup>`:'',c=clk(),C=565.5;
+function clk(){const t=S.timer,s=S.set;if(!t)return{s:hms(s.tm=='cd'?s.cdm*60:s.tm=='pomo'?s.foc*60:0),f:0};if(t.pl)return{s:hms(Math.max(0,t.pl-pel())),f:Math.min(1,pel()/t.pl)};const e=el();return{s:hms(e),f:(e%3600)/3600}}
+P.timer=()=>{const t=S.timer,s=S.set,ts=S.tasks.filter(x=>!isD(x)).sort((a,b)=>scT(b)-scT(a)),es=S.exams.filter(e=>ex(e).d>=0),fs=S.future.filter(f=>!fdn(f)),lk=lock(),og=(l,a,k)=>a.length?`<optgroup label="${l}">${a.map(x=>`<option value="${k}:${x.id}"${UI.tg==k+':'+x.id?' selected':''}>${esc(x.title)} — ${esc(x.subj)}</option>`).join('')}</optgroup>`:'',c=clk(),C=565.5;
 const rg=`<div class=cw><svg viewBox="0 0 200 200"><defs><linearGradient id=fg2 x1=0 y1=0 x2=1 y2=1><stop offset=0 stop-color="#e8808b"/><stop offset=1 stop-color="#a82336"/></linearGradient></defs><circle cx=100 cy=100 r=90 class=tr /><circle id=rg cx=100 cy=100 r=90 class=tf stroke-dasharray="${C}" stroke-dashoffset="${C*(1-c.f)}" transform="rotate(-90 100 100)"/></svg><div id=tm class=clk>${c.s}</div></div>`;
-return `<h2>مؤقت الدراسة</h2><div class="c tm fire">${t?`<small>${esc(lab(t.k,t.i))}</small>${rg}<p class=mu>${t.brk?' استراحة — اشرب ماء وتحرّك':t.st?(t.pomo?' تركيز — الدورة '+(t.blk+1):'قيد الدراسة…'):' متوقف مؤقتًا — لا يُحتسب هذا الوقت'}${0?` · إيقافات: ${t.ps||0}/3`:''}</p><div class=r style="justify-content:center">${t.st?'<button class="b big" data-a=pause> إيقاف مؤقت</button>':'<button class="b pr big" data-a=resume>'+(t.brk?' تخطّي الاستراحة':'▶ استئناف')+'</button>'}<button class=b data-a=adj data-v=-300>−5 د</button><button class=b data-a=adj data-v=300>+5 د</button><button class="b er big" data-a=fin>■ إنهاء الجلسة</button></div>`
-:`${rg}${ts.length+es.length+fs.length?`<select id=tg>${og('المهام (الأهم أولًا)',ts,'t')}${og('الاختبارات',es,'e')}${og(lk?'دراسة المستقبل (مقفلة حتى تنهي المطلوب)':'دراسة المستقبل',fs,'f')}</select> <div class=r style="justify-content:center"><button class="b pr big" data-a=start>▶ ابدأ الدراسة</button></div>`:'<p class=mu>أضف مهمة أو اختبارًا أولًا لتربط الجلسة به.</p>'}`}</div>
-<h3>آخر الجلسات</h3>${S.sessions.length?S.sessions.slice(-8).reverse().map(s=>`<div class=c>${esc(lab(s.k,s.i))}<br><small>${s.d} · ${s.sec<60?s.sec+' ث':fm(s.sec/60)}${s.dist?' ·  '+s.dist:''}</small></div>`).join(''):'<p class=mu>لا جلسات محفوظة بعد.</p>'}`};
+const mm=(k,l,ds)=>`<button class="b mode${s.tm==k?' on':''}" data-a=tmode data-v=${k}><b>${l}</b><small>${ds}</small></button>`,ni=(k,l)=>`<label>${l}<input type=number min=1 max=600 value="${s[k]}" data-c=set data-k=${k} data-t=n data-lo=1></label>`,
+ en=t&&t.pl&&t.st?new Date(t.st+(t.pl-t.pa)*1000):null,
+ stt=!t?'':t.dn?'✅ انتهى الوقت — أحسنت!':!t.st?'⏸ متوقف مؤقتًا — لا يُحتسب هذا الوقت':t.mode=='cd'?'⏳ عدّ تنازلي جارٍ':t.mode=='pomo'?(t.ph=='b'?'☕ استراحة — اشرب ماء وتحرّك':'🍅 تركيز — الدورة '+(t.blk+1)):'قيد الدراسة…',
+ cfg=s.tm=='cd'?`<div class=r style="justify-content:center">${[10,15,25,45,60,90].map(m=>`<button class="b${s.cdm==m?' pr':''}" data-a=cdq data-v=${m}>${m} د</button>`).join('')}</div><div class=fm>${ni('cdm','مدة العدّ التنازلي (بالدقائق)')}</div>`:s.tm=='pomo'?`<div class=fm>${ni('foc','التركيز (د)')}${ni('brk','استراحة قصيرة (د)')}${ni('lbrk','استراحة طويلة كل 4 دورات (د)')}</div>`:'<p class=mu>ساعة إيقاف مفتوحة بلا حدّ زمني — تنتهي عندما تضغط «إنهاء».</p>',
+ run=`<small>${t?esc(lab(t.k,t.i)):''}</small>${rg}<p class=mu>${stt}${en?` · تنتهي ${p2(en.getHours())}:${p2(en.getMinutes())}`:''}</p><div class=r style="justify-content:center">${t?(t.dn?'':t.st?'<button class="b big" data-a=pause>⏸ إيقاف مؤقت</button>':'<button class="b pr big" data-a=resume>▶ استئناف</button>')+(t.ph=='b'?'<button class=b data-a=skip>⏭ تخطّي الاستراحة</button>':'')+'<button class=b data-a=adj data-v=-300>−5 د</button><button class=b data-a=adj data-v=300>+5 د</button><button class="b er big" data-a=fin>■ إنهاء الجلسة</button>':''}</div>`,
+ set=`${rg}<div class=modes>${mm('free','مفتوح','ساعة إيقاف بلا حدّ')}${mm('cd','عدّ تنازلي','وقت محدد ينتهي بتنبيه')}${mm('pomo','بومودورو','تركيز + استراحات تلقائية')}</div>${cfg}${ts.length+es.length+fs.length?`<select id=tg data-c=tg>${og('المهام (الأهم أولًا)',ts,'t')}${og('الاختبارات',es,'e')}${og(lk?'دراسة المستقبل (مقفلة حتى تنهي المطلوب)':'دراسة المستقبل',fs,'f')}</select> <div class=r style="justify-content:center"><button class="b pr big" data-a=start>▶ ابدأ الدراسة</button></div>`:'<p class=mu>أضف مهمة أو اختبارًا أولًا لتربط الجلسة به.</p>'}`;
+return `<h2>مؤقت الدراسة</h2><div class="c tm fire">${t?run:set}</div>
+<h3>⏰ تذكير بجلسة دراسة</h3><div class=c><div class=fm><label>وقت الجلسة<input type=time id=rt value="${s.start}"></label><label>ملاحظة (اختياري)<input id=rn maxlength=60 placeholder="مثال: مراجعة الفيزياء"></label></div><div class=r><button class="b pr" data-a=radd>⏰ ذكّرني</button></div>${S.rems.length?S.rems.slice().sort((a,b)=>a.at-b.at).map(r=>`<div class=r style="justify-content:space-between;margin-top:8px"><span>${rt(r.at)} — ${esc(r.t)}</span><button class=b data-a=rdel data-i=${r.id} title="إلغاء التذكير">${ic('trash')}</button></div>`).join(''):''}<small class=mu>يصلك إشعار حتى لو كان التطبيق مغلقًا (على أندرويد). التذكير اليومي يُفعَّل من الإعدادات.</small></div>
+<h3>آخر الجلسات</h3>${S.sessions.length?S.sessions.slice(-8).reverse().map(x=>`<div class=c>${esc(lab(x.k,x.i))}<br><small>${x.d} · ${x.sec<60?x.sec+' ث':fm(x.sec/60)}${x.dist?' ·  '+x.dist:''}</small></div>`).join(''):'<p class=mu>لا جلسات محفوظة بعد.</p>'}`};
 P.week=()=>{const t=td(),w0=ad(ws(t),UI.wk*7),g=S.set.goal,col=i=>{const d=ad(w0,i),a=S.tasks.filter(x=>x.due==d),tot=a.reduce((s,x)=>s+x.est,0);return `<div class="c dy${d==t?' tdy':''}" data-day=${d}><b>${WD[i]}</b> <small>${d.slice(5)}</small>${S.exams.filter(x=>x.date==d).map(x=>`<div class=xm> ${esc(x.subj)}: ${esc(x.title)}</div>`).join('')}${a.map(x=>`<div class="ch${isD(x)?' dn':''}" draggable=true data-dr=${x.id}><span>${esc(x.title)}<br><small>${esc(x.subj)} · ${fm(x.est)}</small></span><span><button class=s data-a=mv data-i=${x.id} data-v=1 title="يوم لاحق">◀</button><button class=s data-a=mv data-i=${x.id} data-v=-1 title="يوم سابق">▶</button></span></div>`).join('')}<div class=bar><i style="width:${Math.min(100,tot/g*100)}%"></i></div><small> ${fm(tot)}${tot>g*1.15?'  حمل زائد':''} · ${a.length?Math.round(a.filter(isD).length/a.length*100):0}%</small></div>`};
 return `<h2>التقويم الأسبوعي</h2><div class=r><button class=b data-a=wk data-v=-1>الأسبوع السابق</button><button class=b data-a=wk data-v=0>هذا الأسبوع</button><button class=b data-a=wk data-v=1>الأسبوع التالي</button><small>${w0} ← ${ad(w0,6)}</small></div><p class=mu>اسحب المهمة إلى يوم آخر، أو استخدم ◀ ▶. الشريط يقارن حمل اليوم بهدفك.</p><div class=g style="grid-template-columns:repeat(auto-fit,minmax(150px,1fr))">${[0,1,2,3,4,5,6].map(col).join('')}</div>`};
 P.subj=()=>`<h2>المواد الدراسية</h2><form data-f=subj class=r><input name=n required placeholder="اسم مادة جديدة"><button class="b pr">إضافة</button></form><div style="height:10px"></div>`+S.subjects.map(n=>{const ts=S.tasks.filter(x=>x.subj==n),dn_=ts.filter(isD),m=S.sessions.filter(s=>SB(s)==n).reduce((a,s)=>a+s.sec,0)/60,p=ts.length?Math.round(dn_.length/ts.length*100):0,r=ratio(n),w=weak(n);
@@ -289,9 +302,35 @@ return `<h2>الإحصائيات</h2><div class=g>${tl(' السلسلة',streak(
 P.set=()=>{const s=S.set,m=(k,l,ds)=>`<button class="b mode${s.mode==k?' on':''}" data-a=mode data-v=${k}><b>${l}</b><small>${ds}</small></button>`,ck=(k,l)=>`<label class=st><input type=checkbox data-c=set data-k=${k}${s[k]?' checked':''}>${l}</label>`;
 return `<h2>الإعدادات</h2><div class=c><h4> مستوى الصرامة</h4><div class=modes>${m('soft','مرن','تأجيل بلا حدود · المستقبل متاح دائمًا')}${m('mid','متوازن','4 تأجيلات لكل مهمة · قفل المستقبل · تعويض خفيف لتقصير الأمس')}${m('hard','صارم','تأجيلان فقط · قفل المستقبل · تعويض أمس في هدفك')}</div></div>
 <div class=c><h4>الهدف والجدول</h4><div class=fm><label>هدف الدراسة اليومي (ساعات)<input type=number step=.25 min=.25 value="${s.goal/60}" data-c=set data-k=goal data-t=n data-u=60 data-lo=15></label><label>وقت بدء الدراسة<input type=time value="${s.start}" data-c=set data-k=start></label></div>
-${ck('sr','مراجعة متباعدة تلقائية بعد إنجاز الدروس')}${ck('snd','أصوات التنبيه')}</div>
+${ck('snd','أصوات التنبيه')}${ck('rem','تذكير يومي بإشعار عند وقت بدء الدراسة')}</div>
 <div class=c><h4>نسخة احتياطية</h4><textarea id=bk placeholder="للتصدير اضغط «تصدير» ثم انسخ النص. للاستيراد الصق النص هنا ثم اضغط «استيراد»." style="width:100%"></textarea><div class=r><button class="b pr" data-a=exp>تصدير</button><button class=b data-a=imp>استيراد</button><small id=bm></small></div></div>`};
 const qam=()=>`<div class=ov data-a=qx><form data-f=qa class="c md"><h3 style="margin-top:0;color:var(--tx)">＋ إضافة سريعة</h3><input id=qi name=t placeholder="مثال: فيزياء تمارين الحركة 90د غدًا عاجل" autocomplete=off required><small id=qpv>اكتب بحرّية — أفهم المادة والمدة والموعد والأولوية.</small><div class=r><button class="b pr">إضافة</button><button type=button class=b data-a=qx>إلغاء</button></div></form></div>`;
+
+/* ===== سلة المحذوفات ===== */
+const BN={tasks:['المهمة','ونقلها','مهمة'],future:['الموضوع','ونقله','موضوع مستقبلي'],exams:['الاختبار','ونقله','اختبار'],subj:['المادة','ونقلها','مادة']};
+function binAdd(k,it,ix){S.bin.unshift({bid:id(),k,it,ix,at:Date.now()});UI.msg='تم حذف '+BN[k][0]+' بنجاح '+BN[k][1]+' إلى سلة المحذوفات'}
+P.bin=()=>{const B=S.bin,dt=ts=>{const d=new Date(ts);return ymd(d)+' · '+p2(d.getHours())+':'+p2(d.getMinutes())},
+ row=b=>{const sj=b.k=='subj',nm=sj?b.it:b.it.title,x=!sj&&b.it.subj?`<span class=t>${esc(b.it.subj)}</span>`:'';return `<div class=c><div class=ct><b>${esc(nm)}</b></div><div class=cg><span class=t>${BN[b.k][2]}</span>${x}</div><small>🗑 حُذف: ${dt(b.at)}</small><div class=r><button class="b ok" data-a=brs data-i=${b.bid}>↩ استعادة</button>${UI.cf=='b'+b.bid?`<button class="b er" data-a=bdel data-i=${b.bid}>تأكيد الحذف النهائي</button>`:`<button class=b data-a=cf data-v=b${b.bid}>${ic('trash')} حذف نهائي</button>`}</div></div>`};
+ return `<h2>سلة المحذوفات${B.length?' ('+B.length+')':''}</h2>`+(B.length?`<p class=mu>العناصر المحذوفة محفوظة هنا — استعدها إلى مكانها الأصلي بنقرة، أو احذفها نهائيًا.</p>${B.map(row).join('')}<div class=r>${UI.cf=='bin*'?'<button class="b er" data-a=bempty>تأكيد: إفراغ السلة نهائيًا</button>':`<button class=b data-a=cf data-v="bin*">${ic('trash')} إفراغ السلة</button>`}</div>`:'<div class=c><p class=mu style="margin:0">سلة المحذوفات فارغة. ما تحذفه من مهام ومواضيع واختبارات ومواد يظهر هنا ويمكنك استعادته.</p></div>')};
+
+/* ===== المؤقتات والإشعارات ===== */
+const LN=()=>{try{const c=window.Capacitor;return c&&c.Plugins&&c.Plugins.LocalNotifications&&(!c.isNativePlatform||c.isNativePlatform())?c.Plugins.LocalNotifications:null}catch(e){return null}};
+let chOK;const chan=()=>chOK||(chOK=LN()?LN().createChannel({id:'study_timer',name:'مؤقت الدراسة',description:'تنبيهات انتهاء المؤقت وجلسات الدراسة',importance:5,visibility:1,vibration:true,lights:true}).catch(()=>{}):Promise.resolve());
+async function perm(){try{const L=LN();if(L){const p=await L.checkPermissions();if(p.display!=='granted')await L.requestPermissions()}else if(window.Notification&&Notification.permission==='default')await Notification.requestPermission()}catch(e){}}
+function webN(t,b){try{if(!LN()&&window.Notification&&Notification.permission==='granted')new Notification(t,{body:b,tag:'st-timer',renotify:true,vibrate:[200,100,200]})}catch(e){}}
+function notifyU(m){beep(3);try{navigator.vibrate&&navigator.vibrate([300,150,300,150,500])}catch(e){}toast('⏰ '+m);webN('منظّم دراستي',m)}
+const rt=ts=>{const d=new Date(ts);return(ymd(d)==td()?'اليوم':'غدًا')+' '+p2(d.getHours())+':'+p2(d.getMinutes())};
+async function sched(){const L=LN();if(!L)return;try{await chan();await L.cancel({notifications:[1,2,3,4,5,6,7,8].map(id=>({id}))}).catch(()=>{});const t=S.timer;if(!t||!t.st||!t.pl)return;const N=[];let at=t.st+(t.pl-t.pa)*1000;
+ if(t.mode=='cd')N.push({id:1,title:'⏰ انتهى المؤقت',body:'أحسنت! انتهى وقت الدراسة المحدد.',at});
+ else{let ph=t.ph,blk=t.blk;for(let n=1;n<=8;n++){if(ph=='f'){blk++;const bl=(blk%4==0?S.set.lbrk:S.set.brk)*60;N.push({id:n,title:'🍅 انتهى وقت التركيز',body:'خذ استراحة '+fm(bl/60)+' ثم عُد للدراسة.',at});at+=bl*1000;ph='b'}else{N.push({id:n,title:'📚 انتهت الاستراحة',body:'حان وقت التركيز من جديد.',at});at+=S.set.foc*6e4;ph='f'}}}
+ await L.schedule({notifications:N.map(x=>({id:x.id,title:x.title,body:x.body,channelId:'study_timer',schedule:{at:new Date(x.at),allowWhileIdle:true}}))})}catch(e){}}
+async function remSched(r){const L=LN();if(!L)return;try{await chan();await L.schedule({notifications:[{id:r.n,title:'⏰ حان وقت الدراسة',body:r.t,channelId:'study_timer',schedule:{at:new Date(r.at),allowWhileIdle:true}}]})}catch(e){}}
+async function rmSync(){const L=LN();if(!L)return;try{await chan();await L.cancel({notifications:[{id:50}]}).catch(()=>{});if(!S.set.rem)return;const[h,m]=String(S.set.start).split(':').map(Number);await L.schedule({notifications:[{id:50,title:'📚 حان وقت الدراسة',body:'موعد جلستك اليومية بدأ — ابدأ الآن!',channelId:'study_timer',schedule:{on:{hour:h,minute:m},allowWhileIdle:true}}]})}catch(e){}}
+function adv(){const t=S.timer;let ch=0,msg='';while(t&&t.st&&t.pl&&ch<60){const end=t.st+(t.pl-t.pa)*1000;if(Date.now()<end)break;ch++;
+ if(t.mode=='cd'){t.pa=t.pl;t.st=0;t.dn=1;msg='انتهى المؤقت — أحسنت! احفظ الجلسة أو مدّد الوقت.'}
+ else if(t.ph=='f'){t.acc+=t.pl;t.blk++;t.ph='b';t.pl=(t.blk%4==0?S.set.lbrk:S.set.brk)*60;t.pa=0;t.st=end;msg='انتهى وقت التركيز — خذ استراحة '+fm(t.pl/60)}
+ else{t.ph='f';t.pl=S.set.foc*60;t.pa=0;t.st=end;msg='انتهت الاستراحة — حان وقت التركيز'}}
+ if(ch){notifyU(msg);sched()}return ch}
 
 /* ===== الأفعال ===== */
 let AC,WL;
@@ -300,34 +339,41 @@ const beep=n=>{if(!S.set.snd)return;try{prime();for(let i=0;i<(n||1);i++){const 
 function wl(){}
 function burst(x,y){if(RM())return;for(let i=0;i<16;i++){const p=document.createElement('i'),a=Math.random()*6.283,r=40+Math.random()*70;p.className='em';p.style.cssText=`left:${x}px;top:${y}px;--dx:${Math.cos(a)*r}px;--dy:${Math.sin(a)*r-34}px;--s:${4+Math.random()*7}px`;document.body.appendChild(p);setTimeout(()=>p.remove(),900)}}
 function toast(m){const d=document.createElement('div');d.className='toast';d.textContent=m;$('#ts').appendChild(d);setTimeout(()=>d.classList.add('out'),4300);setTimeout(()=>d.remove(),4900)}
-function start(v){const[k,i]=v.split(':');if(S.timer){UI.msg='لديك جلسة قيد التشغيل — أنهِها أولًا.';UI.page='timer';return}if(k=='f'&&lock()){UI.msg=gm();return}prime();S.timer={k,i,acc:0,st:Date.now(),pomo:S.set.pomo,blk:0,ps:0,dist:0};UI.page='timer';wl(true);scrollTo(0,0)}
+function start(v){const[k,i]=v.split(':');if(S.timer){UI.msg='لديك جلسة قيد التشغيل — أنهِها أولًا.';UI.page='timer';return}if(k=='f'&&lock()){UI.msg=gm();return}prime();const m=S.set.tm||'free';S.timer={k,i,mode:m,acc:0,st:Date.now(),pa:0,pl:m=='cd'?S.set.cdm*60:m=='pomo'?S.set.foc*60:0,ph:'f',blk:0,dist:0};UI.page='timer';perm().then(sched);scrollTo(0,0)}
 const A={go:d=>{UI.page=d.v;UI.edit=null;UI.end=false;scrollTo(0,0)},tpl:()=>{const x=$('[name=steps]');if(x)x.value=TPL;return 0},
 done:d=>{const t=T(d.i),w=isD(t);t.done=true;chk(t,w);if(!due().length&&S.tasks.length&&!UI.msg)UI.msg=' أنهيت كل المطلوب منك اليوم. عمل ممتاز!'},
 undo:d=>{const t=T(d.i),w=isD(t);t.done=false;chk(t,w)},play:d=>start(d.v),start:()=>{const g=$('#tg');if(g&&g.value)start(g.value)},
-pause:()=>{const t=S.timer;if(!t||!t.st)return;t.acc+=(Date.now()-t.st)/1000;t.st=0},adj:d=>{const t=S.timer;if(t)t.acc=Math.max(0,t.acc+ +d.v)},
-resume:()=>{const t=S.timer;if(!t)return;t.brk=0;if(!t.st)t.st=Date.now()},
-fin:()=>{const t=S.timer;if(!t)return;const s=Math.round(el()),b=minOn(td(),td());if(s>=1)S.sessions.push({id:id(),k:t.k,i:t.i,sec:s,d:td(),dist:t.dist||0,p:t.pomo?1:0});S.timer=null;wl(false);const a=minOn(td(),td());UI.msg=s>=1?(b<goal()&&a>=goal()?' حققت هدف اليوم! ':' ')+'تم حفظ الجلسة ('+(s<60?s+' ث':fm(s/60))+') وربطها بالمهمة.':'الجلسة قصيرة جدًا ولم تُحفظ.'},
-ed:d=>{UI.edit=d.i;UI.page='tasks';scrollTo(0,0)},cf:d=>{UI.cf=d.v},del:d=>{S[d.k]=S[d.k].filter(x=>x.id!=d.i);UI.cf=''},
+pause:()=>{const t=S.timer;if(!t||!t.st)return;t.pa+=(Date.now()-t.st)/1000;t.st=0;sched()},adj:d=>{const t=S.timer;if(!t)return;const v=+d.v;if(t.pl){t.pl=Math.max(60,t.pl+v);if(t.dn&&v>0){t.dn=0;t.st=Date.now()}sched()}else t.acc=Math.max(0,t.acc+v)},
+tmode:d=>{if(!S.timer)S.set.tm=d.v},cdq:d=>{S.set.cdm=+d.v},skip:()=>{const t=S.timer;if(!t||t.ph!='b')return;t.ph='f';t.pl=S.set.foc*60;t.pa=0;t.st=Date.now();sched()},
+radd:()=>{const v=($('#rt')||{}).value,n=(($('#rn')||{}).value||'').trim();if(!/^\d\d:\d\d$/.test(v||'')){UI.msg='اختر وقتًا صالحًا للتذكير';return}const d=new Date(),[h,m]=v.split(':').map(Number);d.setHours(h,m,0,0);if(d.getTime()<=Date.now()+5000)d.setDate(d.getDate()+1);const r={id:id(),n:100+Math.floor(Math.random()*2e9),at:d.getTime(),t:n||'حان وقت جلسة الدراسة!'};S.rems.push(r);perm().then(()=>remSched(r));UI.msg='تم ضبط التذكير: '+rt(r.at)},
+rdel:d=>{const r=S.rems.find(x=>x.id==d.i);if(!r)return;S.rems=S.rems.filter(x=>x!=r);const L=LN();if(L)L.cancel({notifications:[{id:r.n}]}).catch(()=>{});UI.msg='تم إلغاء التذكير'},
+resume:()=>{const t=S.timer;if(!t||t.dn)return;if(!t.st)t.st=Date.now();perm().then(sched)},
+fin:()=>{const t=S.timer;if(!t)return;const s=Math.round(el()),b=minOn(td(),td());if(s>=1)S.sessions.push({id:id(),k:t.k,i:t.i,sec:s,d:td(),dist:t.dist||0,p:t.mode=='pomo'?1:0,m:t.mode});S.timer=null;sched();const a=minOn(td(),td());UI.msg=s>=1?(b<goal()&&a>=goal()?' حققت هدف اليوم! ':' ')+'تم حفظ الجلسة ('+(s<60?s+' ث':fm(s/60))+') وربطها بالمهمة.':'الجلسة قصيرة جدًا ولم تُحفظ.'},
+ed:d=>{UI.edit=d.i;UI.page='tasks';scrollTo(0,0)},cf:d=>{UI.cf=d.v},del:d=>{const k=d.k,i=(S[k]||[]).findIndex(x=>x.id==d.i);UI.cf='';if(i<0)return;binAdd(k,S[k].splice(i,1)[0],i)},
+brs:d=>{const x=S.bin.findIndex(b=>b.bid==d.i);if(x<0)return;const b=S.bin[x];if(b.k=='subj'){if(!S.subjects.includes(b.it))S.subjects.splice(Math.min(b.ix,S.subjects.length),0,b.it)}else{if(!S[b.k].some(y=>y.id==b.it.id))S[b.k].splice(Math.min(b.ix,S[b.k].length),0,b.it);if(b.it.subj&&!S.subjects.includes(b.it.subj))S.subjects.push(b.it.subj)}S.bin.splice(x,1);UI.msg='تمت استعادة '+BN[b.k][0]+' إلى مكان'+(b.k=='tasks'||b.k=='subj'?'ها':'ه')+' الأصلي'},
+bdel:d=>{S.bin=S.bin.filter(b=>b.bid!=d.i);UI.msg='تم الحذف النهائي'},bempty:()=>{S.bin=[];UI.msg='تم إفراغ سلة المحذوفات'},
 mv:d=>{const t=T(d.i);mvTask(d.i,ad(t.due,+d.v))},tom:d=>{mvTask(d.i,ad(td(),1))},eo:()=>{UI.end=true},ecan:()=>{UI.end=false},
 esave:()=>{const t=td(),dt=dayT(t),d=dt.filter(isD).length,r=dt.length-d;S.days[t]={done:d,total:dt.length,min:Math.round(minOn(t,t)),ok:r==0};UI.end=false;UI.msg=r?'حُفظ سجل اليوم — بقيت '+r+' مهام غير مكتملة، وهي ظاهرة في المتأخرات.':' اكتملت مهام اليوم وتم حفظ السجل.'},
 fdone:d=>{if(lock())UI.msg=gm();else G('future',d.i).done=true},wk:d=>{UI.wk=+d.v?UI.wk+ +d.v:0},
 th:()=>{S.theme=(S.theme||'dark')=='dark'?'light':'dark'},mode:d=>{S.set.mode=d.v},
-sdel:d=>{const n=d.v;if([...S.tasks,...S.future,...S.exams].some(x=>x.subj==n))UI.msg='لا يمكن حذف مادة مرتبطة ببيانات — احذف مهامها أولًا.';else S.subjects=S.subjects.filter(x=>x!=n)},
+sdel:d=>{const n=d.v;if([...S.tasks,...S.future,...S.exams].some(x=>x.subj==n))UI.msg='لا يمكن حذف مادة مرتبطة ببيانات — احذف مهامها أولًا.';else{const i=S.subjects.indexOf(n);if(i>=0){S.subjects.splice(i,1);binAdd('subj',n,i)}}},
 aplan:d=>{const e=G('exams',d.i);if(e)aplan(e)},
 resched:()=>{const t=td(),cap=goal(),od=S.tasks.filter(x=>!isD(x)&&x.due<t).sort((a,b)=>scT(b)-scT(a));if(!od.length){UI.msg='لا توجد مهام متأخرة ';return}const load={};S.tasks.filter(x=>!isD(x)&&x.due>=t).forEach(x=>load[x.due]=(load[x.due]||0)+need(x));let n=0;
  od.forEach(x=>{const m=need(x),ne=nearEx(x.subj),mx=ne&&ne.x.d>=1?ad(ne.e.date,-1):ad(t,14);let d=t;while(d<mx&&(load[d]||0)+m>cap)d=ad(d,1);load[d]=(load[d]||0)+m;x.due=d;n++});UI.msg=' أُعيد توزيع '+n+' مهام متأخرة على الأيام القادمة حسب طاقتك اليومية (وقبل اختبارات موادها).'},
 spill:()=>{const p=plan(),tm=ad(td(),1);let tot=p.must,n=0;p.it.filter(x=>x.must).sort((a,b)=>a.sc-b.sc).forEach(x=>{if(tot<=p.cap*1.1)return;const t=T(x.i);if(t.pri==2)return;const b=t.due;mvTask(x.i,tm);if(t.due!=b){tot-=x.m;n++}});UI.msg=n?'↪ رُحّلت '+n+' مهام أقل أولوية إلى الغد.':'لا يمكن ترحيل شيء — الباقي عاجل أو استنفد تأجيلاته. اجعله أقصر وركّز.'},
 qa:()=>{UI.qa=true},qx:()=>{UI.qa=false},
 exp:()=>{const x=$('#bk');x.value=JSON.stringify(S);x.select();try{document.execCommand('copy')}catch(e){}$('#bm').textContent='النسخة جاهزة — انسخ النص واحفظه في مكان آمن.';return 0},
-imp:()=>{try{const o=JSON.parse($('#bk').value);if(!Array.isArray(o.tasks)||!Array.isArray(o.exams))throw 0;S=Object.assign(D0(),o);S.set=Object.assign(D0().set,o.set||{});UI.msg=' تم استيراد النسخة الاحتياطية'}catch(e){UI.msg=' النص ليس نسخة احتياطية صالحة'}scrollTo(0,0)}};
+imp:()=>{try{const o=JSON.parse($('#bk').value);if(!Array.isArray(o.tasks)||!Array.isArray(o.exams))throw 0;S=Object.assign(D0(),o);S.set=Object.assign(D0().set,o.set||{});fixS();UI.msg=' تم استيراد النسخة الاحتياطية'}catch(e){UI.msg=' النص ليس نسخة احتياطية صالحة'}scrollTo(0,0)}};
 const C={st:(d,v)=>{const t=T(d.i),w=isD(t);t.steps[d.j].d=v;chk(t,w)},mv:(d,v)=>{if(v)mvTask(d.i,v)},
 ls:(d,v)=>{const e=G('exams',d.i);e.lessons[d.j].d=v;setTD('e:'+e.id+':'+d.j,v)},rv:(d,v)=>{const e=G('exams',d.i);e.rv=v;setTD('e:'+e.id+':rv',v)},rdy:(d,v)=>{G('exams',d.i).ready=+v},hr:(d,v)=>{G('exams',d.i).hrs=Math.max(.25,+v||1)},
 fs:(d,v)=>{if(lock())UI.msg=gm();else G('future',d.i).s[d.j]=v},
 rn:(d,v)=>{v=v.trim();if(!v||S.subjects.includes(v))return;S.subjects=S.subjects.map(x=>x==d.v?v:x);[...S.tasks,...S.future,...S.exams].forEach(x=>{if(x.subj==d.v)x.subj=v})},
-set:(d,v)=>{S.set[d.k]=d.t=='n'?Math.max(+d.lo||1,(+v||0)*(+d.u||1)):v},
-pm:(d,v)=>{S.set.pomo=v=='1';save();return 0},
+set:(d,v)=>{S.set[d.k]=d.t=='n'?Math.max(+d.lo||1,(+v||0)*(+d.u||1)):v;if(d.k=='rem'||d.k=='start'){if(d.k=='rem'&&v)perm().then(rmSync);else rmSync()}},
+tg:(d,v)=>{UI.tg=v;return 0},
 qs:(d,v)=>{UI.fs=v},qst:(d,v)=>{UI.fst=v},qd:(d,v)=>{UI.fd=v}};
-function tick(){if(!S.timer)return;const e=$('#tm');if(e){const c=clk();e.textContent=c.s;const r=$('#rg');if(r)r.setAttribute('stroke-dashoffset',565.5*(1-c.f))}}
+function tick(){const n=Date.now();if(S.timer){if(adv()){save();paint();return}const e=$('#tm');if(e){const c=clk();e.textContent=c.s;const r=$('#rg');if(r)r.setAttribute('stroke-dashoffset',565.5*(1-c.f))}}
+ const dr=S.rems.filter(r=>r.at<=n);if(dr.length){S.rems=S.rems.filter(r=>r.at>n);dr.forEach(r=>{if(n-r.at<12e4)notifyU(r.t)});save();if(UI.page=='timer')paint()}
+ if(S.set.rem&&S.lastRm!=td()&&nowMin()==tmin(S.set.start)){S.lastRm=td();notifyU('حان موعد جلسة الدراسة اليومية — ابدأ الآن!');save()}}
 
 /* ===== العرض والانتقالات ===== */
 function render(anim){const m=UI.msg;UI.msg='';document.documentElement.setAttribute('data-theme',S.theme||'dark');
@@ -351,7 +397,7 @@ save();paint()});
 document.addEventListener('dragstart',e=>{const c=e.target.closest&&e.target.closest('[data-dr]');if(c)e.dataTransfer.setData('text',c.dataset.dr)});
 document.addEventListener('dragover',e=>{if(e.target.closest('[data-day]'))e.preventDefault()});
 document.addEventListener('drop',e=>{const c=e.target.closest('[data-day]');if(!c)return;e.preventDefault();const t=T(e.dataTransfer.getData('text'));if(t){mvTask(t.id,c.dataset.day);save();paint()}});
-document.addEventListener('visibilitychange',()=>{if(!document.hidden&&S.timer)paint()});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden){if(S.timer)adv();tick();save();paint()}});
 /* ===== مساعد الذكاء الاصطناعي: تعليمات قابلة للنسخ + استيراد الكود ===== */
 const NORM=s=>String(s==null?'':s).replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d));
 async function cp(t){try{const CL=window.Capacitor&&Capacitor.Plugins&&Capacitor.Plugins.Clipboard;if(CL)await CL.write({string:t});else await navigator.clipboard.writeText(t);return 1}catch(e){try{const x=document.createElement('textarea');x.value=t;document.body.appendChild(x);x.select();const k=document.execCommand('copy');x.remove();return k}catch(_){return 0}}}
@@ -395,5 +441,6 @@ aiundo:()=>{const L=S.aiLog;if(!L)return;const ids=S.exams.filter(e=>e.ab==L.b).
 try{const AP=window.Capacitor&&Capacitor.Plugins&&Capacitor.Plugins.App;AP&&AP.addListener('backButton',()=>{if(UI.qa){UI.qa=false;paint()}else if(UI.page!='home'){UI.page='home';paint()}else AP.minimizeApp&&AP.minimizeApp()})}catch(e){}
 
 setInterval(tick,1000);
+sched();rmSync();
 paint();
 </script></body></html>
